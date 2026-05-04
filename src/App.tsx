@@ -40,7 +40,12 @@ export default function App() {
   // Focus management: move focus to detail on selection change
   useEffect(() => {
     if (selectedProject && detailRef.current) {
-      detailRef.current.focus();
+      detailRef.current.focus({ preventScroll: true });
+      // Ensure detail panel starts at top
+      const scrollContainer = detailRef.current.closest("[data-detail-scroll]");
+      if (scrollContainer && typeof scrollContainer.scrollTo === "function") {
+        scrollContainer.scrollTo(0, 0);
+      }
     }
   }, [selectedProject]);
 
@@ -165,8 +170,8 @@ export default function App() {
 
       {/* Filter bar — fixed, non-scrollable */}
       <div className="shrink-0 border-b border-slate-100 bg-slate-50">
-        <div className="mx-auto max-w-6xl px-4 pt-5 pb-4 sm:px-6">
-          <section aria-label="Project filters" className="mb-3">
+        <div className="mx-auto max-w-6xl px-4 pt-3 pb-2 sm:px-6">
+          <section aria-label="Project filters">
             <FilterBar
               query={query}
               onQueryChange={handleQueryChange}
@@ -179,7 +184,7 @@ export default function App() {
           </section>
 
           {/* Active filter chips + count */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="text-xs font-medium text-slate-500">
               {isLoading ? "Loading…" : `${projects.length} project${projects.length !== 1 ? "s" : ""}`}
             </span>
@@ -214,25 +219,21 @@ export default function App() {
       {/* Main content — fills remaining height, no page scroll */}
       <main
         aria-labelledby="app-title"
-        className={`mx-auto w-full max-w-6xl flex-1 overflow-hidden px-4 py-4 sm:px-6 ${
-          selectedProject ? "grid gap-5 lg:grid-cols-[380px_1fr]" : ""
+        className={`mx-auto flex w-full max-w-6xl flex-1 gap-5 overflow-hidden px-4 pt-3 pb-2 sm:px-6 ${
+          selectedProject ? "lg:grid lg:grid-cols-[380px_1fr]" : "flex flex-col"
         }`}
       >
         {/* List column — independently scrollable */}
         <section
           aria-label="Project list"
-          className={
-            selectedProject
-              ? "overflow-y-auto pr-1 [scrollbar-gutter:stable]"
-              : "overflow-y-auto [scrollbar-gutter:stable]"
-          }
+          className="min-h-0 flex-1 overflow-y-auto pr-1 [scrollbar-gutter:stable]"
         >
           {renderListContent()}
         </section>
 
         {/* Detail column — independently scrollable */}
         {selectedProject && (
-          <aside className="overflow-y-auto rounded-xl border border-slate-200 bg-white p-6 shadow-sm [scrollbar-gutter:stable]">
+          <aside data-detail-scroll className="min-h-0 overflow-y-auto rounded-xl border border-slate-200 bg-white p-6 shadow-sm [scrollbar-gutter:stable]">
             <ProjectDetail
               ref={detailRef}
               project={selectedProject}
