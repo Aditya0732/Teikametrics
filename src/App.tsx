@@ -14,7 +14,7 @@ import { ProjectDetail } from "@/components/ProjectDetail";
 import { LoadingState } from "@/components/LoadingState";
 import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
-import { CopyLinkButton } from "@/components/CopyLinkButton";
+
 import { Slideover } from "@/components/Slideover";
 import { ProjectForm } from "@/components/ProjectForm";
 import { createProject, updateProject } from "@/services/projectService";
@@ -141,36 +141,34 @@ export default function App() {
     <div className="flex h-screen flex-col overflow-hidden bg-slate-50">
       {/* Top bar */}
       <header className="z-30 shrink-0 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-              <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-3 sm:h-14 sm:gap-4 sm:px-6">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 sm:h-8 sm:w-8">
+              <svg className="h-3.5 w-3.5 text-white sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
               </svg>
             </div>
-            <h1 className="text-base font-semibold text-slate-900">
+            <h1 className="text-sm font-bold text-slate-900 tracking-tight sm:text-base">
               Project Hub
             </h1>
           </div>
-          <div className="flex items-center gap-2">
-            <CopyLinkButton />
-            <button
-              type="button"
-              onClick={handleOpenCreate}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
-            >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              New project
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleOpenCreate}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:px-3.5 sm:py-2"
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span className="hidden sm:inline">New project</span>
+            <span className="sm:hidden">New</span>
+          </button>
         </div>
       </header>
 
-      {/* Filter bar — fixed, non-scrollable */}
-      <div className="shrink-0 border-b border-slate-100 bg-slate-50">
-        <div className="mx-auto max-w-6xl px-4 pt-3 pb-2 sm:px-6">
+      {/* Filter bar — fixed, non-scrollable. Hidden on mobile when detail is open. */}
+      <div className={`relative z-20 shrink-0 overflow-visible border-b border-slate-100 bg-slate-50 ${selectedProject ? "hidden lg:block" : ""}`}>
+        <div className="mx-auto max-w-6xl px-3 pt-2.5 pb-2 sm:px-6 sm:pt-3">
           <section aria-label="Project filters">
             <FilterBar
               query={query}
@@ -185,7 +183,7 @@ export default function App() {
 
           {/* Active filter chips + count */}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-slate-500">
+            <span className="text-xs font-semibold text-slate-500">
               {isLoading ? "Loading…" : `${projects.length} project${projects.length !== 1 ? "s" : ""}`}
             </span>
             {hasActiveFilters && (
@@ -219,21 +217,23 @@ export default function App() {
       {/* Main content — fills remaining height, no page scroll */}
       <main
         aria-labelledby="app-title"
-        className={`mx-auto flex w-full max-w-6xl flex-1 gap-5 overflow-hidden px-4 pt-3 pb-2 sm:px-6 ${
+        className={`mx-auto flex w-full max-w-6xl flex-1 gap-4 overflow-hidden px-3 pt-2 pb-2 sm:px-6 sm:pt-3 lg:gap-5 ${
           selectedProject ? "lg:grid lg:grid-cols-[380px_1fr]" : "flex flex-col"
         }`}
       >
-        {/* List column — independently scrollable */}
+        {/* List column — hidden on mobile when detail is open */}
         <section
           aria-label="Project list"
-          className="min-h-0 flex-1 overflow-y-auto pr-1 [scrollbar-gutter:stable]"
+          className={`min-h-0 flex-1 overflow-y-auto pr-1 [scrollbar-gutter:stable] ${
+            selectedProject ? "hidden lg:block" : ""
+          }`}
         >
           {renderListContent()}
         </section>
 
-        {/* Detail column — independently scrollable */}
+        {/* Detail column — full-screen on mobile, side panel on desktop */}
         {selectedProject && (
-          <aside data-detail-scroll className="min-h-0 overflow-y-auto rounded-xl border border-slate-200 bg-white p-6 shadow-sm [scrollbar-gutter:stable]">
+          <aside data-detail-scroll className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:flex-none [scrollbar-gutter:stable]">
             <ProjectDetail
               ref={detailRef}
               project={selectedProject}

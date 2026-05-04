@@ -61,12 +61,12 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
         </div>
 
         {/* Title */}
-        <h2 className="text-xl font-bold text-slate-900 leading-tight sm:text-2xl">
+        <h2 className="text-2xl font-extrabold text-slate-900 leading-tight tracking-tight sm:text-[28px]">
           {project.title}
         </h2>
 
         {/* Meta bar: status + owner + date */}
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500 sm:mt-3 sm:gap-3">
           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusCfg.bg} ${statusCfg.text}`}>
             <span className={`h-2 w-2 rounded-full ${statusCfg.dot}`} aria-hidden="true" />
             {statusCfg.label}
@@ -86,31 +86,31 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
         </div>
 
         {/* Divider */}
-        <hr className="my-6 border-slate-200" />
+        <hr className="my-4 border-slate-200 sm:my-6" />
 
         {/* Description */}
         <div>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-2">
             Description
           </h3>
-          <p className="text-sm leading-relaxed text-slate-700">
+          <p className="text-[15px] leading-relaxed text-slate-600">
             {project.description}
           </p>
         </div>
 
         {/* Info cards */}
-        <div className="mt-6 grid grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4">
           <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Owner
             </h3>
-            <p className="mt-1 text-sm font-medium text-slate-800">{project.owner}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-800">{project.owner}</p>
           </div>
           <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Last Updated
             </h3>
-            <p className="mt-1 text-sm font-medium text-slate-800">{formattedDate}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-800">{formattedDate}</p>
             <p className="text-xs text-slate-500">{formattedTime}</p>
           </div>
           <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
@@ -128,7 +128,7 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
         </div>
 
         {/* Tags */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
             Tags
           </h3>

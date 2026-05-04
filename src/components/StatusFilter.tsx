@@ -17,7 +17,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
     <fieldset>
       <legend className="sr-only">Filter by status</legend>
       <div
-        className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5"
+        className="inline-flex items-center overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         role="radiogroup"
         aria-label="Filter by status"
       >

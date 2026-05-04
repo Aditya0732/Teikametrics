@@ -66,7 +66,7 @@ export function TagFilter({ allTags, selected, onChange }: TagFilterProps) {
       {/* Dropdown panel */}
       {open && (
         <div
-          className="absolute left-0 top-full z-20 mt-1.5 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/50"
+          className="absolute right-0 top-full z-50 mt-1.5 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/50"
           role="listbox"
           aria-multiselectable="true"
           aria-label="Select tags"

@@ -52,33 +52,33 @@ export function ProjectCard({
       )}
 
       {/* Title */}
-      <h2 className="text-sm font-semibold text-slate-900 leading-snug line-clamp-1">
+      <h2 className="text-[15px] font-bold text-slate-900 leading-snug tracking-tight line-clamp-1">
         {project.title}
       </h2>
 
       {/* Description snippet */}
-      <p className="mt-1 text-xs leading-relaxed text-slate-500 line-clamp-2">
+      <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500 line-clamp-2">
         {project.description}
       </p>
 
       {/* Tags */}
-      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
         {visibleTags.map((tag) => (
           <span
             key={tag}
-            className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600"
+            className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600"
           >
             {tag}
           </span>
         ))}
         {extraTagCount > 0 && (
-          <span className="text-[10px] text-slate-400">+{extraTagCount}</span>
+          <span className="text-[11px] text-slate-400">+{extraTagCount}</span>
         )}
       </div>
 
       {/* Meta row: status + owner + date */}
-      <div className="mt-2.5 flex items-center gap-1.5 text-[11px] text-slate-500">
-        <span className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 ${statusCfg.bg} ${statusCfg.text}`}>
+      <div className="mt-2.5 flex items-center gap-2 text-xs text-slate-500">
+        <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${statusCfg.bg} ${statusCfg.text}`}>
           <span className={`h-1.5 w-1.5 rounded-full ${statusCfg.dot}`} aria-hidden="true" />
           {statusCfg.label}
         </span>
