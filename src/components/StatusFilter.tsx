@@ -19,7 +19,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
       <legend className="sr-only">Filter by status</legend>
       <Stack
         direction="row"
-        className="!inline-flex !items-center !overflow-x-auto !rounded-lg !border !border-slate-200 !bg-slate-50 !p-0.5 !gap-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="!inline-flex !flex-nowrap !items-center !overflow-x-auto !rounded-lg !border !border-slate-200 !bg-slate-50 !p-0.5 !gap-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         role="radiogroup"
         aria-label="Filter by status"
       >

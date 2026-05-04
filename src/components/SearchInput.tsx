@@ -16,14 +16,18 @@ export function SearchInput({
   const [localValue, setLocalValue] = useState(value);
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedValue = useDebounce(localValue, debounceMs);
+  const prevValueRef = useRef(value);
 
-  // Sync debounced value upstream
+  // Sync debounced local value upstream (only if it differs from external value)
   useEffect(() => {
-    onChange(debouncedValue);
+    if (debouncedValue !== prevValueRef.current) {
+      onChange(debouncedValue);
+    }
   }, [debouncedValue, onChange]);
 
-  // Sync external value changes (e.g., URL restore, clear filters)
+  // Sync external value changes (e.g., clear filters, URL restore)
   useEffect(() => {
+    prevValueRef.current = value;
     setLocalValue(value);
   }, [value]);
 

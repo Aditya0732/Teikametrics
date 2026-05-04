@@ -1,289 +1,70 @@
 /**
  * Project Hub Lite — main application shell.
- * Master-detail layout with URL-synced filters, debounced search,
- * keyboard shortcuts, and optional CRUD via slideovers.
+ * Thin composition layer: delegates state to useAppState,
+ * and renders AppHeader, FilterSection, MainContent, and Slideover.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import type { Project } from "./types";
-import { useUrlState } from "@/hooks/useUrlState";
-import { useProjects } from "@/hooks/useProjects";
+import { useCallback } from "react";
+import { useAppState } from "@/hooks/useAppState";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
-import { Button, Stack } from "@/ui-stub";
-import { CopyLinkButton } from "@/components/CopyLinkButton";
-import { FilterBar } from "@/components/FilterBar";
-import { ProjectList } from "@/components/ProjectList";
-import { ProjectDetail } from "@/components/ProjectDetail";
-import { LoadingState } from "@/components/LoadingState";
-import { ErrorState } from "@/components/ErrorState";
-import { EmptyState } from "@/components/EmptyState";
-
+import { AppHeader } from "@/components/AppHeader";
+import { FilterSection } from "@/components/FilterSection";
+import { MainContent } from "@/components/MainContent";
 import { Slideover } from "@/components/Slideover";
 import { ProjectForm } from "@/components/ProjectForm";
-import { createProject, updateProject } from "@/services/projectService";
 import "./App.css";
 
 export default function App() {
-  const { query, status, tags, selectedId, setFilters } = useUrlState();
-
-  const { projects, allTags, isLoading, error, retry } = useProjects({
-    query,
-    status,
-    tags,
-  });
-
-  const detailRef = useRef<HTMLDivElement>(null);
-
-  // Find selected project
-  const selectedProject = useMemo(
-    () => projects.find((p) => p.id === selectedId) ?? null,
-    [projects, selectedId],
-  );
-
-  // Focus management: move focus to detail on selection change
-  useEffect(() => {
-    if (selectedProject && detailRef.current) {
-      detailRef.current.focus({ preventScroll: true });
-      // Ensure detail panel starts at top
-      const scrollContainer = detailRef.current.closest("[data-detail-scroll]");
-      if (scrollContainer && typeof scrollContainer.scrollTo === "function") {
-        scrollContainer.scrollTo(0, 0);
-      }
-    }
-  }, [selectedProject]);
+  const state = useAppState();
 
   // --- Keyboard shortcuts ---
   const focusSearch = useCallback(() => {
     document.getElementById("project-search")?.focus();
   }, []);
 
-  const closeDetail = useCallback(() => {
-    setFilters({ selectedId: "" });
-  }, [setFilters]);
-
-  // Ctrl+K or "/" → focus search
   useKeyboardShortcut({ key: "k", ctrl: true, handler: focusSearch, global: true });
   useKeyboardShortcut({ key: "/", handler: focusSearch });
-
-  // Escape → close detail (only when not in slideover)
-  useKeyboardShortcut({
-    key: "Escape",
-    handler: closeDetail,
-    global: true,
-  });
-
-  // --- Filter handlers ---
-  const handleQueryChange = useCallback(
-    (q: string) => setFilters({ query: q }),
-    [setFilters],
-  );
-  const handleStatusChange = useCallback(
-    (s: typeof status) => setFilters({ status: s }),
-    [setFilters],
-  );
-  const handleTagsChange = useCallback(
-    (t: string[]) => setFilters({ tags: t }),
-    [setFilters],
-  );
-  const handleSelect = useCallback(
-    (id: string) =>
-      setFilters({ selectedId: id === selectedId ? "" : id }),
-    [setFilters, selectedId],
-  );
-
-  const handleClearFilters = useCallback(() => {
-    setFilters({ query: "", status: "", tags: [], selectedId: "" });
-  }, [setFilters]);
-
-  // --- CRUD (stretch) ---
-  const [slideoverMode, setSlideoverMode] = useState<
-    "closed" | "create" | "edit"
-  >("closed");
-  const [editingProject, setEditingProject] = useState<Project | undefined>();
-
-  function handleOpenCreate() {
-    setEditingProject(undefined);
-    setSlideoverMode("create");
-  }
-
-  function handleOpenEdit(id: string) {
-    const p = projects.find((proj) => proj.id === id);
-    if (p) {
-      setEditingProject(p);
-      setSlideoverMode("edit");
-    }
-  }
-
-  async function handleFormSubmit(data: Omit<Project, "id" | "updatedAt">) {
-    if (slideoverMode === "create") {
-      await createProject(data);
-    } else if (slideoverMode === "edit" && editingProject) {
-      await updateProject(editingProject.id, data);
-    }
-    setSlideoverMode("closed");
-    retry(); // Re-fetch to pick up changes
-  }
-
-  // --- Rendering helpers ---
-  const hasActiveFilters = query || status || tags.length > 0;
-
-  function renderListContent() {
-    if (isLoading) return <LoadingState />;
-    if (error) return <ErrorState message={error} onRetry={retry} />;
-    if (projects.length === 0) return <EmptyState />;
-    return (
-      <ProjectList
-        projects={projects}
-        selectedId={selectedId}
-        onSelect={handleSelect}
-        compact={!!selectedProject}
-        onEdit={handleOpenEdit}
-      />
-    );
-  }
+  useKeyboardShortcut({ key: "Escape", handler: state.closeDetail, global: true });
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-slate-50">
-      {/* Top bar */}
-      <header className="z-30 shrink-0 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-3 sm:h-14 sm:gap-4 sm:px-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 sm:h-8 sm:w-8">
-              <svg className="h-3.5 w-3.5 text-white sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-              </svg>
-            </div>
-            <h1 className="text-sm font-bold text-slate-900 tracking-tight sm:text-base">
-              Project Hub
-            </h1>
-          </div>
-          <Stack direction="row" className="!items-center !gap-2">
-            <CopyLinkButton />
-            <Button
-              onClick={handleOpenCreate}
-              className="!inline-flex !items-center !gap-1.5 !rounded-lg bg-indigo-600 !px-3 !py-1.5 !text-xs !font-medium !text-white !shadow-sm !border-indigo-600 hover:!bg-indigo-700 sm:!px-3.5 sm:!py-2"
-            >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              <span className="hidden sm:inline">New project</span>
-              <span className="sm:hidden">New</span>
-            </Button>
-          </Stack>
-        </div>
-      </header>
+      <AppHeader onCreateProject={state.handleOpenCreate} />
 
-      {/* Filter bar — fixed, non-scrollable. Hidden on mobile when detail is open. */}
-      <div className={`relative z-20 shrink-0 overflow-visible border-b border-slate-100 bg-slate-50 ${selectedProject ? "hidden lg:block" : ""}`}>
-        <div className="mx-auto max-w-6xl px-3 pt-2.5 pb-2 sm:px-6 sm:pt-3">
-          <section aria-label="Project filters">
-            <FilterBar
-              query={query}
-              onQueryChange={handleQueryChange}
-              status={status}
-              onStatusChange={handleStatusChange}
-              allTags={allTags}
-              selectedTags={tags}
-              onTagsChange={handleTagsChange}
-            />
-          </section>
+      <FilterSection
+        query={state.query}
+        onQueryChange={state.handleQueryChange}
+        status={state.status}
+        onStatusChange={state.handleStatusChange}
+        allTags={state.allTags}
+        selectedTags={state.tags}
+        onTagsChange={state.handleTagsChange}
+        projectCount={state.projects.length}
+        isLoading={state.isLoading}
+        hasActiveFilters={state.hasActiveFilters}
+        onClearFilters={state.handleClearFilters}
+        hasSelectedProject={!!state.selectedProject}
+      />
 
-          {/* Active filter chips + count */}
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">
-              {isLoading ? "Loading…" : `${projects.length} project${projects.length !== 1 ? "s" : ""}`}
-            </span>
-            {hasActiveFilters && (
-              <>
-                <span className="h-3 w-px bg-slate-200" aria-hidden="true" />
-                <button
-                  type="button"
-                  onClick={handleClearFilters}
-                  className="text-xs font-medium text-indigo-600 hover:text-indigo-800 focus-visible:outline-none focus-visible:underline"
-                >
-                  Clear filters
-                </button>
-              </>
-            )}
-            {/* Keyboard hint — subtle, right-aligned */}
-            <span className="ml-auto hidden text-[11px] text-slate-400 sm:inline-flex sm:items-center sm:gap-1">
-              <kbd className="rounded border border-slate-200 bg-slate-50 px-1 py-0.5 font-mono text-[10px]">/</kbd>
-              search
-              {selectedProject && (
-                <>
-                  <span className="mx-1">·</span>
-                  <kbd className="rounded border border-slate-200 bg-slate-50 px-1 py-0.5 font-mono text-[10px]">Esc</kbd>
-                  close
-                </>
-              )}
-            </span>
-          </div>
-        </div>
-      </div>
+      <MainContent
+        projects={state.projects}
+        selectedProject={state.selectedProject}
+        selectedId={state.selectedId}
+        isLoading={state.isLoading}
+        error={state.error}
+        onSelect={state.handleSelect}
+        onClose={state.closeDetail}
+        onEdit={state.handleOpenEdit}
+        onRetry={state.retry}
+      />
 
-      {/* Main content — fills remaining height, no page scroll */}
-      <LayoutGroup>
-        <main
-          aria-labelledby="app-title"
-          className="mx-auto flex w-full max-w-6xl flex-1 gap-4 overflow-hidden px-3 pt-2 pb-2 sm:px-6 sm:pt-3 lg:gap-5"
-        >
-          {/* List column — hidden on mobile when detail is open */}
-          <motion.section
-            layout
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            aria-label="Project list"
-            className={`min-h-0 overflow-y-auto pr-1 [scrollbar-gutter:stable] ${
-              selectedProject ? "hidden lg:block lg:w-[380px] lg:shrink-0" : "flex-1"
-            }`}
-          >
-            {renderListContent()}
-          </motion.section>
-
-          {/* Detail column — full-screen on mobile, side panel on desktop */}
-          <AnimatePresence>
-            {selectedProject && (
-              <motion.aside
-                key="detail-panel"
-                data-detail-scroll
-                layout
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 30, transition: { duration: 0.2 } }}
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [scrollbar-gutter:stable]"
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={selectedProject.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <ProjectDetail
-                      ref={detailRef}
-                      project={selectedProject}
-                      onClose={closeDetail}
-                      onEdit={handleOpenEdit}
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </motion.aside>
-            )}
-          </AnimatePresence>
-        </main>
-      </LayoutGroup>
-
-      {/* Slideover (create/edit) */}
       <Slideover
-        open={slideoverMode !== "closed"}
-        onClose={() => setSlideoverMode("closed")}
-        title={slideoverMode === "create" ? "Create Project" : "Edit Project"}
+        open={state.slideoverMode !== "closed"}
+        onClose={() => state.setSlideoverMode("closed")}
+        title={state.slideoverMode === "create" ? "Create Project" : "Edit Project"}
       >
         <ProjectForm
-          initial={slideoverMode === "edit" ? editingProject : undefined}
-          onSubmit={handleFormSubmit}
-          onCancel={() => setSlideoverMode("closed")}
+          initial={state.slideoverMode === "edit" ? state.editingProject : undefined}
+          onSubmit={state.handleFormSubmit}
+          onCancel={() => state.setSlideoverMode("closed")}
         />
       </Slideover>
     </div>

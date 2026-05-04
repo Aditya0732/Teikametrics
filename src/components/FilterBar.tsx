@@ -24,16 +24,20 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <SearchInput value={query} onChange={onQueryChange} />
       </div>
-      <div className="flex items-center gap-2">
-        <StatusFilter value={status} onChange={onStatusChange} />
-        <TagFilter
-          allTags={allTags}
-          selected={selectedTags}
-          onChange={onTagsChange}
-        />
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="overflow-x-auto min-w-0 shrink [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <StatusFilter value={status} onChange={onStatusChange} />
+        </div>
+        <div className="shrink-0">
+          <TagFilter
+            allTags={allTags}
+            selected={selectedTags}
+            onChange={onTagsChange}
+          />
+        </div>
       </div>
     </div>
   );

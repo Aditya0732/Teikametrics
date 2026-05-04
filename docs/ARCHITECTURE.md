@@ -2,38 +2,48 @@
 
 ## Overview
 Project Hub Lite follows a **feature-based component architecture** with clean separation of concerns:
-- **Components** — presentational + container components
-- **Hooks** — reusable stateful logic (data fetching, URL sync, debounce)
+- **Components** — presentational UI components (single responsibility)
+- **Hooks** — reusable stateful logic (data fetching, URL sync, debounce, app state)
 - **Services** — data access layer (simulated async API)
 - **ui-stub** — shared design-system primitives (untouched)
+
+## Design Principles
+- **No file exceeds ~100 lines** — enforced via component/hook extraction
+- **Separation of concerns** — state logic in hooks, layout in components, data in services
+- **Composition over inheritance** — App.tsx is a thin shell composing smaller pieces
+- **Single responsibility** — each file has one clear purpose
 
 ## Folder Structure
 ```
 src/
-├── components/           # All UI components
-│   ├── ProjectList.tsx   # Filtered list container
-│   ├── ProjectCard.tsx   # Individual project card (uses ui-stub Card)
-│   ├── ProjectDetail.tsx # Detail side panel (full project info)
-│   ├── SearchInput.tsx   # Debounced search with <label>
-│   ├── FilterBar.tsx     # Composes Search + Status + Tag filters
-│   ├── StatusFilter.tsx  # Status toggle (all/active/paused/archived)
-│   ├── TagFilter.tsx     # Multi-select tag checkboxes
-│   ├── CopyLinkButton.tsx# Copies current URL to clipboard
-│   ├── EmptyState.tsx    # "No projects match" message
-│   ├── ErrorState.tsx    # Error message + retry button
-│   ├── LoadingState.tsx  # Loading skeleton animation
-│   ├── Slideover.tsx     # Reusable drawer (create/edit)
-│   └── ProjectForm.tsx   # Create/Edit form inside slideover
+├── components/             # All UI components
+│   ├── AppHeader.tsx       # Top bar: logo, copy-link, new-project button
+│   ├── FilterSection.tsx   # Filter bar + status count + keyboard hints
+│   ├── MainContent.tsx     # Master-detail layout (list + detail panel)
+│   ├── ProjectList.tsx     # Animated list of ProjectCards
+│   ├── ProjectCard.tsx     # Individual project card (uses ui-stub Card)
+│   ├── ProjectDetail.tsx   # Detail side panel (full project info)
+│   ├── FilterBar.tsx       # Composes Search + Status + Tag filters
+│   ├── SearchInput.tsx     # Debounced search with keyboard hints
+│   ├── StatusFilter.tsx    # Segmented status toggle
+│   ├── TagFilter.tsx       # Multi-select tag dropdown
+│   ├── CopyLinkButton.tsx  # Copies current URL to clipboard
+│   ├── EmptyState.tsx      # "No projects match" message
+│   ├── ErrorState.tsx      # Error message + retry button
+│   ├── LoadingState.tsx    # Loading skeleton animation
+│   ├── Slideover.tsx       # Reusable drawer (create/edit)
+│   └── ProjectForm.tsx     # Create/Edit form inside slideover
 ├── hooks/
-│   ├── useProjects.ts    # Async data loading + filtering + stale handling
-│   ├── useDebounce.ts    # Generic debounce hook
-│   ├── useUrlState.ts    # Two-way URL ↔ filter state sync
+│   ├── useAppState.ts      # Central app state: filters, CRUD, selection
+│   ├── useProjects.ts      # Async data loading + filtering + stale handling
+│   ├── useDebounce.ts      # Generic debounce hook
+│   ├── useUrlState.ts      # Two-way URL ↔ filter state sync
 │   └── useKeyboardShortcut.ts  # Global keyboard shortcut registration
 ├── services/
-│   └── projectService.ts # Simulated API with delay/error toggles
+│   └── projectService.ts   # Simulated API with delay/error toggles
 ├── data/
-│   └── projects.json     # Mock dataset (4 projects)
-├── ui-stub/              # Design-system stubs (DO NOT MODIFY)
+│   └── projects.json       # Mock dataset (10 projects)
+├── ui-stub/                # Design-system stubs (DO NOT MODIFY)
 │   ├── Button.tsx
 │   ├── Card.tsx
 │   ├── Text.tsx
@@ -41,14 +51,36 @@ src/
 │   ├── index.ts
 │   └── ui-stub.css
 ├── test/
-│   └── setup.ts          # Vitest setup (jest-dom matchers)
-├── App.tsx               # Main app shell — layout + routing
-├── App.test.tsx          # All behavioral tests
-├── App.css               # Minimal shell styles
-├── types.ts              # Shared TypeScript interfaces
-├── main.tsx              # Entry point (React + Router)
-├── index.css             # Tailwind base imports
-└── vite-env.d.ts         # Vite type declarations
+│   └── setup.ts            # Vitest setup (jest-dom matchers)
+├── App.tsx                 # Thin composition shell (~70 lines)
+├── App.test.tsx            # All behavioral tests
+├── App.css                 # Minimal shell styles (scrollbar)
+├── types.ts                # Shared TypeScript interfaces
+├── main.tsx                # Entry point (React + Router)
+├── index.css               # Tailwind base imports + typography
+└── vite-env.d.ts           # Vite type declarations
+```
+
+## Component Hierarchy
+```
+App.tsx (composition shell — keyboard shortcuts + layout)
+├── AppHeader          — logo, copy-link button, new-project button
+├── FilterSection      — search, status tabs, tag dropdown, count
+├── MainContent        — master-detail layout with animations
+│   ├── ProjectList    — staggered card list
+│   │   └── ProjectCard — individual card (uses Card, Button, Text, Stack)
+│   └── ProjectDetail  — full project info panel
+└── Slideover          — create/edit drawer
+    └── ProjectForm    — form fields + submit/cancel
+```
+
+## State Architecture
+```
+useAppState() — single hook managing:
+├── useUrlState()    — URL ↔ filter sync (query, status, tags, selectedId)
+├── useProjects()    — data fetching + filtering + loading/error states
+├── CRUD state       — slideover mode, editing project
+└── Handler functions — all callbacks for child components
 ```
 
 ## Data Flow
