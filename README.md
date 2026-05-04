@@ -2,6 +2,22 @@
 
 A small **Project Hub** UI where users browse internal projects, narrow the list with search and filters, and open a detail view — built with React 18 + TypeScript + Vite.
 
+**Live demo:** https://project-hub-ej1g.onrender.com/
+
+## Table of Contents
+
+- [How to run and test](#how-to-run-and-test)
+- [Assumptions](#assumptions)
+- [Debounce](#debounce)
+- [Focus](#focus)
+- [Keyboard shortcuts](#keyboard-shortcuts)
+- [AI and verification](#ai-and-verification)
+- [Optional stretch](#optional-stretch)
+- [Bonus (Tailwind)](#bonus-tailwind)
+- [Project structure](#project-structure)
+- [Documentation](#documentation)
+- [Path alias](#path-alias)
+
 ## How to run and test
 
 ```bash
@@ -69,11 +85,23 @@ The initial implementation used `forwardRef` directly on the `Card` stub compone
 ## Project structure
 
 - `src/components/` — UI components (ProjectCard, ProjectDetail, FilterBar, Slideover, etc.)
-- `src/hooks/` — Custom hooks (useUrlState, useProjects, useDebounce, useKeyboardShortcut)
+- `src/hooks/` — Custom hooks (useAppState, useUrlState, useProjects, useDebounce, useKeyboardShortcut)
 - `src/services/` — Mock API layer with simulated delay
 - `src/data/` — Static project data (projects.json)
 - `src/ui-stub/` — Design system primitives (Button, Card, Text, Stack)
 - `src/test/` — Test setup
+
+## Documentation
+
+All project documentation lives in the `docs/` folder:
+
+| Document | Description |
+|----------|-------------|
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, folder structure, component hierarchy, data flow, and state management |
+| [PROMPTS.md](docs/PROMPTS.md) | Full record of all AI prompts used during development with outcomes |
+| [DECISIONS.md](docs/DECISIONS.md) | Key technical decisions and trade-offs made during implementation |
+| [TESTING_STRATEGY.md](docs/TESTING_STRATEGY.md) | Testing approach, what is tested, and how tests are structured |
+| [PROJECT_SETUP.md](docs/PROJECT_SETUP.md) | Initial project setup steps and configuration details |
 
 ## Path alias
 
