@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TagFilterProps {
   allTags: string[];
@@ -64,13 +65,18 @@ export function TagFilter({ allTags, selected, onChange }: TagFilterProps) {
       </fieldset>
 
       {/* Dropdown panel */}
-      {open && (
-        <div
-          className="absolute right-0 top-full z-50 mt-1.5 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/50"
-          role="listbox"
-          aria-multiselectable="true"
-          aria-label="Select tags"
-        >
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+            className="absolute right-0 top-full z-50 mt-1.5 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/50"
+            role="listbox"
+            aria-multiselectable="true"
+            aria-label="Select tags"
+          >
           <div className="max-h-52 overflow-y-auto">
             {allTags.map((tag) => {
               const isActive = selected.includes(tag);
@@ -113,8 +119,9 @@ export function TagFilter({ allTags, selected, onChange }: TagFilterProps) {
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -128,10 +128,20 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">
-          <Button type="submit" variant="primary" disabled={!isValid}>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isValid}
+            className="!inline-flex !items-center !gap-1.5 !rounded-lg !bg-indigo-600 !px-4 !py-2 !text-sm !font-medium !text-white !shadow-sm !border-indigo-600 hover:!bg-indigo-700 disabled:!opacity-50 disabled:!cursor-not-allowed"
+          >
             {initial ? "Save changes" : "Create project"}
           </Button>
-          <Button type="button" variant="ghost" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onCancel}
+            className="!inline-flex !items-center !gap-1.5 !rounded-lg !border !border-slate-200 !bg-white !px-4 !py-2 !text-sm !font-medium !text-slate-700 !shadow-sm hover:!bg-slate-50 hover:!border-slate-300"
+          >
             Cancel
           </Button>
         </div>

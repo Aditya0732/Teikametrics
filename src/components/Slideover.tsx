@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/ui-stub";
 
 interface SlideoverProps {
@@ -41,42 +42,52 @@ export function Slideover({ open, onClose, title, children }: SlideoverProps) {
     }
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/30 transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Panel */}
-      <div
-        ref={panelRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        className="relative z-10 flex h-full w-full max-w-md flex-col bg-white shadow-xl focus:outline-none"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-          <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-          <Button
-            variant="ghost"
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 bg-black/30"
             onClick={onClose}
-            aria-label="Close"
-            className="!px-2 !py-1 text-xs"
-          >
-            ✕
-          </Button>
-        </div>
+            aria-hidden="true"
+          />
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4">{children}</div>
-      </div>
-    </div>
+          {/* Panel */}
+          <motion.div
+            ref={panelRef}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
+            className="relative z-10 flex h-full w-full max-w-md flex-col bg-white shadow-xl focus:outline-none"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+              <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                aria-label="Close"
+                className="!rounded-md !border !border-slate-200 !bg-white !px-2 !py-1 !text-sm !text-slate-500 hover:!bg-slate-50 hover:!text-slate-700"
+              >
+                ✕
+              </Button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-4">{children}</div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -2,7 +2,7 @@
   {
     "id": "ads-console",
     "title": "Advertising Campaign Console",
-    "description": "A comprehensive campaign management and reporting platform for advertising workflows. Enables teams to create, schedule, and monitor ad campaigns across multiple channels including display, search, and social media. Features real-time performance dashboards with key metrics like CTR, CPA, and ROAS. Integrates with major ad networks and provides automated budget optimization recommendations based on historical performance data.",
+    "description": "A comprehensive campaign management and reporting platform for advertising workflows. Enables teams to create, schedule, and monitor ad campaigns across multiple channels including display, search, and social media. Features real-time performance dashboards with key metrics like CTR, CPA, and ROAS. Integrates with major ad networks and provides automated budget optimization recommendations based on historical performance data. The platform supports multi-currency budgeting, audience segmentation builders, and creative asset management with version control. Teams can set up automated rules for bid adjustments, budget pacing, and campaign pausing based on performance thresholds. Recent additions include predictive analytics for campaign forecasting and cross-channel attribution modeling.",
     "status": "active",
     "owner": "Team Aurora",
     "updatedAt": "2026-03-12T14:22:00.000Z",
@@ -11,7 +11,7 @@
   {
     "id": "clips-editor",
     "title": "Short-form Clips Editor",
-    "description": "End-to-end short-form video editing and publishing pipeline built for content creators and social media managers. Supports trimming, transitions, text overlays, and audio mixing with a drag-and-drop timeline interface. Includes auto-captioning powered by speech recognition, aspect ratio presets for different platforms (TikTok, Reels, Shorts), and one-click publishing to connected social accounts. Processing runs on a scalable cloud infrastructure to handle high-volume batch exports.",
+    "description": "End-to-end short-form video editing and publishing pipeline built for content creators and social media managers. Supports trimming, transitions, text overlays, and audio mixing with a drag-and-drop timeline interface. Includes auto-captioning powered by speech recognition, aspect ratio presets for different platforms (TikTok, Reels, Shorts), and one-click publishing to connected social accounts. Processing runs on a scalable cloud infrastructure to handle high-volume batch exports. The editor also features AI-powered scene detection for automatic highlight reel generation, background music suggestions based on content mood analysis, and collaborative editing with real-time commenting. Built-in brand kit management allows teams to maintain consistent visual identity across all published content.",
     "status": "active",
     "owner": "Team Byte",
     "updatedAt": "2026-04-01T09:10:00.000Z",
@@ -20,7 +20,7 @@
   {
     "id": "audit-log",
     "title": "Portfolio Audit Log",
-    "description": "A read-only audit trail system that tracks and records all metadata changes across the project portfolio. Captures who made what change, when, and provides before/after diffs for every modification. Supports advanced filtering by date range, user, and change type. Designed to meet SOC 2 and ISO 27001 compliance requirements with tamper-proof log storage and automated retention policies. Exports to CSV and PDF for external auditors.",
+    "description": "A read-only audit trail system that tracks and records all metadata changes across the project portfolio. Captures who made what change, when, and provides before/after diffs for every modification. Supports advanced filtering by date range, user, and change type. Designed to meet SOC 2 and ISO 27001 compliance requirements with tamper-proof log storage and automated retention policies. Exports to CSV and PDF for external auditors. The system uses append-only event sourcing architecture ensuring complete immutability of records. Includes configurable alerting for sensitive changes like permission escalations or bulk deletions, with Slack and email notification channels for compliance officers.",
     "status": "paused",
     "owner": "Team Core",
     "updatedAt": "2026-02-28T18:00:00.000Z",
@@ -29,7 +29,7 @@
   {
     "id": "legacy-import",
     "title": "Legacy CSV Import",
-    "description": "One-off bulk importer designed to migrate data from legacy spreadsheet-based systems into the modern project hub platform. Handles CSV, TSV, and Excel formats with configurable column mapping, data validation rules, and duplicate detection. Includes a dry-run mode for previewing imports before committing changes. Scheduled for retirement once the final batch of historical data has been migrated from the three remaining legacy systems.",
+    "description": "One-off bulk importer designed to migrate data from legacy spreadsheet-based systems into the modern project hub platform. Handles CSV, TSV, and Excel formats with configurable column mapping, data validation rules, and duplicate detection. Includes a dry-run mode for previewing imports before committing changes. Scheduled for retirement once the final batch of historical data has been migrated from the three remaining legacy systems. The tool supports incremental imports with conflict resolution strategies (skip, overwrite, merge) and maintains a complete audit trail of all migration operations for rollback purposes. Performance-optimized to process files up to 500MB with chunked streaming.",
     "status": "archived",
     "owner": "Team Core",
     "updatedAt": "2025-11-05T11:45:00.000Z",
@@ -38,7 +38,7 @@
   {
     "id": "analytics-hub",
     "title": "Unified Analytics Hub",
-    "description": "Centralized analytics platform that aggregates data from multiple internal tools and third-party services into a single unified dashboard. Provides customizable widgets for tracking KPIs, user engagement metrics, and business health indicators. Features automated weekly report generation, anomaly detection alerts, and drill-down capabilities for deep-dive analysis. Built on a columnar data warehouse for sub-second query performance across billions of events.",
+    "description": "Centralized analytics platform that aggregates data from multiple internal tools and third-party services into a single unified dashboard. Provides customizable widgets for tracking KPIs, user engagement metrics, and business health indicators. Features automated weekly report generation, anomaly detection alerts, and drill-down capabilities for deep-dive analysis. Built on a columnar data warehouse for sub-second query performance across billions of events. Supports scheduled data exports to stakeholder email lists, embeddable chart components for internal wikis, and a SQL playground for ad-hoc queries by analysts. The platform processes over 2 billion events daily with end-to-end latency under 5 minutes from event ingestion to dashboard visibility.",
     "status": "active",
     "owner": "Team Insight",
     "updatedAt": "2026-04-15T16:30:00.000Z",
@@ -47,7 +47,7 @@
   {
     "id": "auth-gateway",
     "title": "Authentication Gateway",
-    "description": "Enterprise-grade authentication and authorization gateway serving as the single entry point for all internal microservices. Implements OAuth 2.0, SAML 2.0, and OpenID Connect protocols with support for multi-factor authentication and passwordless login via WebAuthn. Handles token lifecycle management, session revocation, and role-based access control policies. Processes over 50,000 authentication requests per minute with 99.99% uptime SLA.",
+    "description": "Enterprise-grade authentication and authorization gateway serving as the single entry point for all internal microservices. Implements OAuth 2.0, SAML 2.0, and OpenID Connect protocols with support for multi-factor authentication and passwordless login via WebAuthn. Handles token lifecycle management, session revocation, and role-based access control policies. Processes over 50,000 authentication requests per minute with 99.99% uptime SLA. The gateway includes a self-service admin portal for managing client applications, API scopes, and consent flows. Recent security enhancements include device fingerprinting, suspicious login detection with automatic account lockout, and integration with hardware security modules (HSMs) for key management.",
     "status": "active",
     "owner": "Team Shield",
     "updatedAt": "2026-04-20T08:15:00.000Z",
@@ -56,7 +56,7 @@
   {
     "id": "design-system",
     "title": "Component Design System",
-    "description": "Shared design system package providing a consistent set of React UI primitives used across all micro-frontend surfaces. Includes buttons, forms, modals, data tables, navigation components, and complex patterns like file uploaders and date pickers. Ships with full accessibility compliance (WCAG 2.1 AA), Storybook documentation, visual regression testing, and semantic versioning. Currently used by 12 production applications with over 80 components in the library.",
+    "description": "Shared design system package providing a consistent set of React UI primitives used across all micro-frontend surfaces. Includes buttons, forms, modals, data tables, navigation components, and complex patterns like file uploaders and date pickers. Ships with full accessibility compliance (WCAG 2.1 AA), Storybook documentation, visual regression testing, and semantic versioning. Currently used by 12 production applications with over 80 components in the library. The system includes a Figma plugin for automatic design-to-code synchronization, dark mode support across all components, and performance-optimized bundle splitting. Each component ships with comprehensive TypeScript types, unit tests with 95%+ coverage, and interactive examples.",
     "status": "active",
     "owner": "Team Foundation",
     "updatedAt": "2026-04-18T11:00:00.000Z",
@@ -65,7 +65,7 @@
   {
     "id": "notification-service",
     "title": "Notification Service",
-    "description": "Multi-channel notification delivery system supporting email, SMS, push notifications, and in-app messages. Features a template engine with variable interpolation, A/B testing for notification copy, and intelligent delivery scheduling to optimize open rates based on user timezone and engagement patterns. Includes an admin panel for managing notification preferences, delivery logs, and bounce/complaint handling for email reputation management.",
+    "description": "Multi-channel notification delivery system supporting email, SMS, push notifications, and in-app messages. Features a template engine with variable interpolation, A/B testing for notification copy, and intelligent delivery scheduling to optimize open rates based on user timezone and engagement patterns. Includes an admin panel for managing notification preferences, delivery logs, and bounce/complaint handling for email reputation management. The service implements priority queuing to ensure critical alerts are delivered within seconds while batching lower-priority digests. Supports localization in 14 languages with automatic translation fallbacks and per-user language preference detection from browser settings.",
     "status": "active",
     "owner": "Team Comms",
     "updatedAt": "2026-03-25T14:45:00.000Z",
@@ -74,7 +74,7 @@
   {
     "id": "search-platform",
     "title": "Internal Search Platform",
-    "description": "Full-text search engine powering search across all internal tools, documentation, and project data. Built on Elasticsearch with custom analyzers for technical content, fuzzy matching, and faceted search. Supports real-time indexing with sub-second latency from data change to search availability. Includes search analytics to track popular queries, zero-result rates, and click-through patterns for continuous relevance tuning.",
+    "description": "Full-text search engine powering search across all internal tools, documentation, and project data. Built on Elasticsearch with custom analyzers for technical content, fuzzy matching, and faceted search. Supports real-time indexing with sub-second latency from data change to search availability. Includes search analytics to track popular queries, zero-result rates, and click-through patterns for continuous relevance tuning. The platform features personalized search rankings based on user role and team context, federated search across multiple data sources, and a natural language query parser that understands intent-based searches. Currently paused pending evaluation of vector search capabilities for semantic document retrieval.",
     "status": "paused",
     "owner": "Team Discovery",
     "updatedAt": "2026-01-15T10:30:00.000Z",
@@ -83,7 +83,7 @@
   {
     "id": "ci-pipeline",
     "title": "CI/CD Pipeline Manager",
-    "description": "Internal continuous integration and deployment orchestration tool managing the build, test, and release lifecycle for all engineering projects. Supports parallel test execution, canary deployments, automatic rollbacks on failure, and environment promotion workflows. Integrates with GitHub, Docker, Kubernetes, and Terraform for end-to-end infrastructure-as-code deployments. Tracks build metrics, deployment frequency, and change failure rates aligned with DORA metrics.",
+    "description": "Internal continuous integration and deployment orchestration tool managing the build, test, and release lifecycle for all engineering projects. Supports parallel test execution, canary deployments, automatic rollbacks on failure, and environment promotion workflows. Integrates with GitHub, Docker, Kubernetes, and Terraform for end-to-end infrastructure-as-code deployments. Tracks build metrics, deployment frequency, and change failure rates aligned with DORA metrics. The system includes a visual pipeline designer for non-engineers, cost tracking per deployment with cloud spend attribution, and automated compliance checks that gate production releases. Archived in favor of migrating to a managed CI/CD solution to reduce operational overhead.",
     "status": "archived",
     "owner": "Team Platform",
     "updatedAt": "2025-12-20T09:00:00.000Z",

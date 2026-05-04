@@ -4,10 +4,13 @@
  * keyboard shortcuts, and optional CRUD via slideovers.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import type { Project } from "./types";
 import { useUrlState } from "@/hooks/useUrlState";
 import { useProjects } from "@/hooks/useProjects";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import { Button, Stack } from "@/ui-stub";
+import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { FilterBar } from "@/components/FilterBar";
 import { ProjectList } from "@/components/ProjectList";
 import { ProjectDetail } from "@/components/ProjectDetail";
@@ -133,6 +136,8 @@ export default function App() {
         projects={projects}
         selectedId={selectedId}
         onSelect={handleSelect}
+        compact={!!selectedProject}
+        onEdit={handleOpenEdit}
       />
     );
   }
@@ -152,17 +157,19 @@ export default function App() {
               Project Hub
             </h1>
           </div>
-          <button
-            type="button"
-            onClick={handleOpenCreate}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:px-3.5 sm:py-2"
-          >
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            <span className="hidden sm:inline">New project</span>
-            <span className="sm:hidden">New</span>
-          </button>
+          <Stack direction="row" className="!items-center !gap-2">
+            <CopyLinkButton />
+            <Button
+              onClick={handleOpenCreate}
+              className="!inline-flex !items-center !gap-1.5 !rounded-lg bg-indigo-600 !px-3 !py-1.5 !text-xs !font-medium !text-white !shadow-sm !border-indigo-600 hover:!bg-indigo-700 sm:!px-3.5 sm:!py-2"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span className="hidden sm:inline">New project</span>
+              <span className="sm:hidden">New</span>
+            </Button>
+          </Stack>
         </div>
       </header>
 
@@ -215,34 +222,57 @@ export default function App() {
       </div>
 
       {/* Main content — fills remaining height, no page scroll */}
-      <main
-        aria-labelledby="app-title"
-        className={`mx-auto flex w-full max-w-6xl flex-1 gap-4 overflow-hidden px-3 pt-2 pb-2 sm:px-6 sm:pt-3 lg:gap-5 ${
-          selectedProject ? "lg:grid lg:grid-cols-[380px_1fr]" : "flex flex-col"
-        }`}
-      >
-        {/* List column — hidden on mobile when detail is open */}
-        <section
-          aria-label="Project list"
-          className={`min-h-0 flex-1 overflow-y-auto pr-1 [scrollbar-gutter:stable] ${
-            selectedProject ? "hidden lg:block" : ""
-          }`}
+      <LayoutGroup>
+        <main
+          aria-labelledby="app-title"
+          className="mx-auto flex w-full max-w-6xl flex-1 gap-4 overflow-hidden px-3 pt-2 pb-2 sm:px-6 sm:pt-3 lg:gap-5"
         >
-          {renderListContent()}
-        </section>
+          {/* List column — hidden on mobile when detail is open */}
+          <motion.section
+            layout
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            aria-label="Project list"
+            className={`min-h-0 overflow-y-auto pr-1 [scrollbar-gutter:stable] ${
+              selectedProject ? "hidden lg:block lg:w-[380px] lg:shrink-0" : "flex-1"
+            }`}
+          >
+            {renderListContent()}
+          </motion.section>
 
-        {/* Detail column — full-screen on mobile, side panel on desktop */}
-        {selectedProject && (
-          <aside data-detail-scroll className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:flex-none [scrollbar-gutter:stable]">
-            <ProjectDetail
-              ref={detailRef}
-              project={selectedProject}
-              onClose={closeDetail}
-              onEdit={handleOpenEdit}
-            />
-          </aside>
-        )}
-      </main>
+          {/* Detail column — full-screen on mobile, side panel on desktop */}
+          <AnimatePresence>
+            {selectedProject && (
+              <motion.aside
+                key="detail-panel"
+                data-detail-scroll
+                layout
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 30, transition: { duration: 0.2 } }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [scrollbar-gutter:stable]"
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={selectedProject.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <ProjectDetail
+                      ref={detailRef}
+                      project={selectedProject}
+                      onClose={closeDetail}
+                      onEdit={handleOpenEdit}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </motion.aside>
+            )}
+          </AnimatePresence>
+        </main>
+      </LayoutGroup>
 
       {/* Slideover (create/edit) */}
       <Slideover

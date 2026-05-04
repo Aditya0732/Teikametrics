@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import type { Project } from "@/types";
+import { Button, Text, Stack } from "@/ui-stub";
 
 const STATUS_CONFIG: Record<string, { label: string; dot: string; bg: string; text: string }> = {
   active: { label: "Active", dot: "bg-emerald-500", bg: "bg-emerald-50", text: "text-emerald-700" },
@@ -20,10 +21,6 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
       "en-US",
       { year: "numeric", month: "long", day: "numeric" },
     );
-    const formattedTime = new Date(project.updatedAt).toLocaleTimeString(
-      "en-US",
-      { hour: "2-digit", minute: "2-digit" },
-    );
 
     return (
       <div
@@ -34,39 +31,39 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
         className="focus-visible:outline-none"
       >
         {/* Close button - top right */}
-        <div className="mb-4 flex items-center justify-between">
-          <button
-            type="button"
+        <Stack direction="row" className="mb-4 !justify-between">
+          <Button
+            variant="ghost"
             onClick={onClose}
-            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
             aria-label="Close detail panel"
+            className="!inline-flex !items-center !gap-1.5 !rounded-lg !px-2 !py-1 !text-xs !font-medium !text-slate-500 !border-0 !bg-transparent hover:!bg-slate-100 hover:!text-slate-700"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            Back to list
-          </button>
+            Back
+          </Button>
           {onEdit && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
               onClick={() => onEdit(project.id)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-1"
+              className="!inline-flex !items-center !gap-1.5 !rounded-lg !border !border-slate-200 !bg-white !px-3 !py-1.5 !text-xs !font-medium !text-slate-700 !shadow-sm hover:!bg-slate-50"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
               </svg>
               Edit
-            </button>
+            </Button>
           )}
-        </div>
+        </Stack>
 
         {/* Title */}
-        <h2 className="text-2xl font-extrabold text-slate-900 leading-tight tracking-tight sm:text-[28px]">
+        <Text as="h2" tone="title" className="!text-2xl !font-extrabold leading-tight tracking-tight sm:!text-[28px]">
           {project.title}
-        </h2>
+        </Text>
 
         {/* Meta bar: status + owner + date */}
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500 sm:mt-3 sm:gap-3">
+        <Stack direction="row" className="mt-2 !gap-2 text-sm text-slate-500 sm:mt-3 sm:!gap-3">
           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusCfg.bg} ${statusCfg.text}`}>
             <span className={`h-2 w-2 rounded-full ${statusCfg.dot}`} aria-hidden="true" />
             {statusCfg.label}
@@ -83,56 +80,17 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
             </svg>
             Updated {formattedDate}
           </span>
-        </div>
+        </Stack>
 
         {/* Divider */}
         <hr className="my-4 border-slate-200 sm:my-6" />
 
-        {/* Description */}
-        <div>
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-2">
-            Description
-          </h3>
-          <p className="text-[15px] leading-relaxed text-slate-600">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Info cards */}
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4">
-          <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Owner
-            </h3>
-            <p className="mt-1 text-sm font-semibold text-slate-800">{project.owner}</p>
-          </div>
-          <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Last Updated
-            </h3>
-            <p className="mt-1 text-sm font-semibold text-slate-800">{formattedDate}</p>
-            <p className="text-xs text-slate-500">{formattedTime}</p>
-          </div>
-          <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Status
-            </h3>
-            <p className="mt-1 text-sm font-medium capitalize text-slate-800">{project.status}</p>
-          </div>
-          <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-3">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Project ID
-            </h3>
-            <p className="mt-1 text-sm font-mono text-slate-600">{project.id}</p>
-          </div>
-        </div>
-
         {/* Tags */}
-        <div className="mt-4 sm:mt-6">
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <div>
+          <Text as="h3" tone="muted" className="mb-2 !text-xs !font-semibold uppercase tracking-wider">
             Tags
-          </h3>
-          <div className="flex flex-wrap gap-2">
+          </Text>
+          <Stack direction="row" className="!gap-2">
             {project.tags.map((tag) => (
               <span
                 key={tag}
@@ -141,7 +99,17 @@ export const ProjectDetail = forwardRef<HTMLDivElement, ProjectDetailProps>(
                 {tag}
               </span>
             ))}
-          </div>
+          </Stack>
+        </div>
+
+        {/* Description */}
+        <div className="mt-4 sm:mt-6">
+          <Text as="h3" tone="muted" className="mb-1.5 !text-xs !font-semibold uppercase tracking-wider sm:mb-2">
+            Description
+          </Text>
+          <Text as="p" tone="body" className="!text-[15px] leading-relaxed">
+            {project.description}
+          </Text>
         </div>
       </div>
     );
